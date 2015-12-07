@@ -6,33 +6,61 @@ object Test extends jacop {
 
   def main(args: Array[String]): Unit = {
 
-    def creerCours(noms: List[String], ects: List[Int], bloc: List[Int], dejaReussi: List[Int]): IndexedSeq[Cours] = {
-      def creerCour(intitule: String, dejaReussi: Integer, bloc: Integer, credits: Integer): Cours = {
-        new Cours(intitule, dejaReussi, bloc, credits)
+    def creerCours(noms: List[String], ects: List[Int], bloc: List[Int], dejaReussi: List[Int], quadriBloque: List[Int]): IndexedSeq[Cours] = {
+      def creerCour(intitule: String, dejaReussi: Integer, bloc: Integer, credits: Integer, quadriBloque: Integer): Cours = {
+        new Cours(intitule, dejaReussi, bloc, credits, quadriBloque)
       }
 
-      val cours = for (a <- 0 until noms.length) yield creerCour(noms(a), dejaReussi(a), bloc(a), ects(a))
+      val cours = for (a <- 0 until noms.length) yield creerCour(noms(a), dejaReussi(a), bloc(a), ects(a), quadriBloque(a))
       cours
+    }
+
+    def creerCorequis(toutCorequis: List[List[etape3.Cours]]) = {
+      for (listeCorequis <- toutCorequis) {
+        for (i <- 0 until listeCorequis.length - 1) {
+          if (listeCorequis(i).reussi == 1 && listeCorequis(i + 1).reussi == 1)
+            listeCorequis(i).booleen #= listeCorequis(i + 1).booleen
+        }
+      }
+    }
+
+    def creerPrerequis(toutPrerequis: List[List[Cours]]): List[IntVar] = {
+      val listConversion = for (prerequis <- toutPrerequis) yield IntVar("", 0, 1)
+
+      for (i <- 0 until toutPrerequis.length) {
+        if ((toutPrerequis(i))(1).reussi == 1) {
+          (toutPrerequis(i))(0).booleen #= listConversion(i)
+          (toutPrerequis(i))(0).ok #<= (toutPrerequis(i))(1).ok
+        } else {
+          listConversion(i) #= 0;
+        }
+      }
+      listConversion
     }
 
     //interface insertion cours
     val intitules = List("coursa", "coursb", "coursc", "coursd", "course", "coursf")
     val ects = List(3, 6, 9, 8, 5, 3)
     val bloc = List(1, 1, 1, 1, 2, 2)
-
+    val quadriBloque = List(0, 0, 1, 1, 2, 2)
+    
     //interface eleve
     val reussi = List(0, 1, 0, 1, 1, 0)
 
     //creation des objets Cours et les mettre dans une liste
-    val cours = creerCours(intitules, ects, bloc, reussi)
-    val coursBloc1 = for(a <- cours if a.getBloc == 1) yield a
-    
+    val cours = creerCours(intitules, ects, bloc, reussi, quadriBloque)
+    val coursBloc1 = for (a <- cours if a.blocCours == 1) yield a
+
     //interface cours prerequis / corequis
     //utilisez cours(a) ou a designe l index du courss
-
-    val prerequis = List(List(cours(1), List(cours(2), cours(3))), List(cours(2), List(cours(5))))
+    //1er liste a comme prerequis le 2eme
+    val prerequis = List(List(cours(1), cours(2)), List(cours(1), cours(3)), List(cours(2), cours(5)))
     val corequis = List(List(cours(1), cours(2), cours(3)), List(cours(4), cours(5)))
 
+    //creation des conditions pour les prerequis et corequis
+    creerCorequis(corequis)
+    val listConversion = creerPrerequis(prerequis)
+    
     val nbCredits = 180;
     val creditAnnee = nbCredits / 3;
     val creditsBloc1 = creditAnnee / 4 * 3;
@@ -197,7 +225,7 @@ object Test extends jacop {
 
     } else if (totalEctsRestant < 60) {
       println(totalEctsRestant);
-      //prendre tt les cours et ._2 # ._3
+      //prendre tt les cours et ._2 #= ._3
     } else {
 
       //si le cours a deja été reussi, on ne le repasse pas

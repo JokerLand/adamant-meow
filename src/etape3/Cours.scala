@@ -2,24 +2,22 @@ package etape3
 
 import JaCoP.scala._
 
-class Cours(intitule: String, dejaReussi: Integer, bloc: Integer, credits: Integer) {
+class Cours(intitule: String, dejaReussi: Integer, bloc: Integer, credits: Integer, quadriBloque : Integer) {
 
-  val booleen = new BoolVar(intitule);
+  val booleen = new BoolVar(intitule)
   val ok = new IntVar(intitule, 0, 1)
   
   booleen <=> (ok #= 1)
-
-  def getBool() : BoolVar = booleen
   
-  def getInt() : IntVar = ok;
+  val nom = intitule
   
-  def getIntitule() : String = intitule;
+  val reussi = dejaReussi
   
-  def getReussi() : Integer = dejaReussi;
+  val blocCours = bloc
   
-  def getBloc() : Integer = bloc;
+  val ects = credits
   
-  def getCredits() : Integer = credits;
+  val blocant = quadriBloque
 
   override def toString() : String = intitule + " : reussi = " + dejaReussi + " bloc = " + bloc + " credits = " + credits
 }
