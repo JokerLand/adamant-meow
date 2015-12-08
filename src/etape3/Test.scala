@@ -6,16 +6,16 @@ object Test extends jacop {
 
   def main(args: Array[String]): Unit = {
 
-    def creerCours(noms: List[String], ects: List[Int], bloc: List[Int], dejaReussi: List[Int], quadriBloque: List[Int]): IndexedSeq[Cours] = {
+    def creerCours(noms: List[String], ects: List[Int], bloc: List[Int], dejaReussi: List[Int], quadriBloque: List[Int]): List[Cours] = {
       def creerCour(intitule: String, dejaReussi: Integer, bloc: Integer, credits: Integer, quadriBloque: Integer): Cours = {
         new Cours(intitule, dejaReussi, bloc, credits, quadriBloque)
       }
 
-      val cours = for (a <- 0 until noms.length) yield creerCour(noms(a), dejaReussi(a), bloc(a), ects(a), quadriBloque(a))
+      val cours = for (a <- List.range(0, noms.length)) yield creerCour(noms(a), dejaReussi(a), bloc(a), ects(a), quadriBloque(a))
       cours
     }
 
-    def creerCorequis(toutCorequis: List[List[etape3.Cours]]){
+    def creerCorequis(toutCorequis: List[List[etape3.Cours]]) {
       for (listeCorequis <- toutCorequis) {
         for (i <- 0 until listeCorequis.length - 1) {
           if (listeCorequis(i).reussi == 1 && listeCorequis(i + 1).reussi == 1)
@@ -23,8 +23,6 @@ object Test extends jacop {
         }
       }
     }
-    
-    
 
     def creerPrerequis(toutPrerequis: List[List[Cours]]): List[IntVar] = {
       val listConversion = for (prerequis <- toutPrerequis) yield IntVar("", 0, 1)
@@ -40,19 +38,43 @@ object Test extends jacop {
       listConversion
     }
 
-    def creerCoursBloquant(cours : List[Cours]){
-//    	val liste1 = for(c<- cours if c.blocant == 1) yield c :: (for(c<- cours if c.blocant == 2) yield c) :: Nil
-    	val liste1 = for(c<- cours if c.blocant == 1) yield c
-    	val liste2 = for(c<- cours if c.blocant == 2) yield c
-//        val bloqunzt = creerCoursBloquantIntVar("", 0,1) :: Nil
+    def append(x: List[IntVar], y: List[IntVar]): List[IntVar] = {
+      x match {
+        case Nil => y match {
+          case Nil => Nil
+          case ye :: ys => ye :: append(x, ys)
+        }
+        case xe :: xs => xe :: append(xs, y)
+      }
     }
-    
+
+    def creerCoursBloquant(cours: List[Cours]) : List[IntVar] =  {
+      val liste1 = for (c <- cours if c.blocant == 1) yield c
+      val liste2 = for (c <- cours if c.blocant == 2) yield c
+
+      append(creerContraintesCoursBloquants(liste1), creerContraintesCoursBloquants(liste2))
+    }
+
+    def creerContraintesCoursBloquants(cours: List[Cours]): List[IntVar] = {
+
+      cours match {
+        case Nil => Nil
+        case tete :: queue => {
+          val intvars = for (i <- List.range(1, cours.length)) yield new IntVar("", 0, 1)
+          for (i <- 1 until cours.length) {
+            (tete.booleen /\ cours(i).booleen) <=> (intvars(i - 1) #= 1)
+          }
+          append(creerContraintesCoursBloquants(queue), intvars)
+        }
+      }
+    }
+
     //interface insertion cours
     val intitules = List("coursa", "coursb", "coursc", "coursd", "course", "coursf")
     val ects = List(3, 6, 9, 8, 5, 3)
     val bloc = List(1, 1, 1, 1, 2, 2)
     val quadriBloque = List(0, 0, 1, 1, 2, 2)
-    
+
     //interface eleve
     val reussi = List(0, 1, 0, 1, 1, 0)
 
@@ -68,8 +90,9 @@ object Test extends jacop {
 
     //creation des conditions pour les prerequis et corequis
     creerCorequis(corequis)
-    val listConversion = creerPrerequis(prerequis)
-    
+    val listConversionPrerequis = creerPrerequis(prerequis)
+    val listConversionCoursBloquants = creerCoursBloquant(cours)
+
     val nbCredits = 180;
     val creditAnnee = nbCredits / 3;
     val creditsBloc1 = creditAnnee / 4 * 3;
@@ -216,18 +239,21 @@ object Test extends jacop {
       println("PREMIERE (" + totalEctsReussis + " ects reussis)");
       val coursBloc1 = List(apoo._2, algo._2, ianarch._2, prograWeb._2, sd._2, ios._2, fo._2, eco._2, math1._2, math2._2, pdw._2, ang1._2);
 
-      apoo._2 #= apoo._3
-      algo._2 #= algo._3
-      ianarch._2 #= ianarch._3
-      prograWeb._2 #= prograWeb._3
-      sd._2 #= sd._3
-      ios._2 #= ios._3
-      fo._2 #= fo._3
-      eco._2 #= eco._3
-      math1._2 #= math1._3
-      math2._2 #= math2._3
-      pdw._2 #= pdw._3
-      ang1._2 #= ang1._3
+      for(c <- cours if c.blocCours == 1) {
+        c.booleen #= c.reussi
+      }
+//      apoo._2 #= apoo._3
+//      algo._2 #= algo._3
+//      ianarch._2 #= ianarch._3
+//      prograWeb._2 #= prograWeb._3
+//      sd._2 #= sd._3
+//      ios._2 #= ios._3
+//      fo._2 #= fo._3
+//      eco._2 #= eco._3
+//      math1._2 #= math1._3
+//      math2._2 #= math2._3
+//      pdw._2 #= pdw._3
+//      ang1._2 #= ang1._3
 
       println(satisfy(search(coursBloc1, input_order, indomain_max)));
       println(coursBloc1);
