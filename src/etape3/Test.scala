@@ -15,7 +15,7 @@ object Test extends jacop {
       cours
     }
 
-    def creerCorequis(toutCorequis: List[List[etape3.Cours]]) = {
+    def creerCorequis(toutCorequis: List[List[etape3.Cours]]){
       for (listeCorequis <- toutCorequis) {
         for (i <- 0 until listeCorequis.length - 1) {
           if (listeCorequis(i).reussi == 1 && listeCorequis(i + 1).reussi == 1)
@@ -23,6 +23,8 @@ object Test extends jacop {
         }
       }
     }
+    
+    
 
     def creerPrerequis(toutPrerequis: List[List[Cours]]): List[IntVar] = {
       val listConversion = for (prerequis <- toutPrerequis) yield IntVar("", 0, 1)
@@ -38,6 +40,13 @@ object Test extends jacop {
       listConversion
     }
 
+    def creerCoursBloquant(cours : List[Cours]){
+//    	val liste1 = for(c<- cours if c.blocant == 1) yield c :: (for(c<- cours if c.blocant == 2) yield c) :: Nil
+    	val liste1 = for(c<- cours if c.blocant == 1) yield c
+    	val liste2 = for(c<- cours if c.blocant == 2) yield c
+//        val bloqunzt = creerCoursBloquantIntVar("", 0,1) :: Nil
+    }
+    
     //interface insertion cours
     val intitules = List("coursa", "coursb", "coursc", "coursd", "course", "coursf")
     val ects = List(3, 6, 9, 8, 5, 3)

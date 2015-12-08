@@ -217,3 +217,4 @@ pip-log.txt
 *.cache
 .cache
 *.class
+*.class
