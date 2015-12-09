@@ -1,0 +1,19 @@
+Algo;6;1;1
+ianarch;5;1;1
+progra Web;4;1;1
+sd;6;1;1
+intro à l os;5;1;1
+Fonctionnement ordinateur;6;1;1
+Economie et comptabilité;5;1;1
+math1;4;1;1
+math2;6;1;1
+projet developpement web;4;1;1
+Anglais 1;4;1;1
+c;2;1;2
+Programmation Avancée en Java;4;1;2
+Analyse et Conception;6;1;2
+Gestion des Données;6;1;2
+Programmation Web avancée;6;1;2
+Systeme informatique : principes et protocoles;4;1;2
+Internet : principes et protocoles avances;3;1;2
+Organisation des entreprises;6;1;2
