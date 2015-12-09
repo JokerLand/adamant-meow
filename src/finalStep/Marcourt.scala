@@ -173,8 +173,8 @@ object Marcourt extends jacop {
 
       val b = minimize(search(coursIntVar, input_order, indomain_max), transgression)
       if (b) {
-        println("nombre de conversion prerequis/corequis = " + nombredeconversion)
-        println("nombre de cours bloquant le meme quadrimestre " + coursBlocants)
+        println("nombre de conversion prerequis/corequis = " + nombredeconversion.value)
+        println("nombre de cours bloquant le meme quadrimestre = " + coursBlocants.value)
         printSol(coursIntVar)
       } else
         println("Aucune solution trouvée")
