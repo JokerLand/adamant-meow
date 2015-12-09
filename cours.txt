@@ -1,19 +1,32 @@
 Algo;6;1;1
-ianarch;5;1;1
-progra Web;4;1;1
-sd;6;1;1
-intro à l os;5;1;1
-Fonctionnement ordinateur;6;1;1
-Economie et comptabilité;5;1;1
-math1;4;1;1
-math2;6;1;1
-projet developpement web;4;1;1
-Anglais 1;4;1;1
-c;2;1;2
-Programmation Avancée en Java;4;1;2
-Analyse et Conception;6;1;2
-Gestion des Données;6;1;2
-Programmation Web avancée;6;1;2
-Systeme informatique : principes et protocoles;4;1;2
-Internet : principes et protocoles avances;3;1;2
-Organisation des entreprises;6;1;2
+apoo;5;1;0
+ianarch;5;1;0
+progra Web;4;1;0
+sd;6;1;0
+intro à l OS;5;1;0
+Fonctionnement ordinateur;6;1;0
+Economie et comptabilité;5;1;0
+math1;4;1;0
+math2;6;1;0
+projet developpement web;4;1;2
+Anglais 1;4;1;0
+c;2;2;0
+Programmation Avancée en Java;4;2;0
+Analyse et Conception;6;2;0
+Gestion des Données;6;2;0
+Programmation Web avancée;6;2;0
+Systeme informatique : principes et protocoles;4;2;0
+Internet : principes et protocoles avances;3;2;0
+Organisation des entreprises;6;2;0
+Design d'application entreprise;6;2;0
+Unix;5;2;0
+Informatique mobile;4;2;1
+Anglais 2;5;2;0
+Programmation Java : Questions Speciale;5;2;0
+Administration et Securité des Systemes;4;2;0
+Administration et Secrité des Reseaux;5;2;0
+Anlgais 3;4;2;0
+Mise en situation professionelle;3;2;0
+Activité d'intégration en milieu professionel;30;2;2
+Intelligence artificielle;4;2;0
+Remlissage;8;2;0
