@@ -5,18 +5,18 @@
 # Exemple : Algo;1        -> Indique que je dois encore passer le cours d'algo
 #			apoo;0        -> Indique que je ne dois plus passer le cours de apoo
 # /!\ Attention l'ordre des cours dans ce fichier dois être le même que le fichier cours.txt  /!\
-Algo;1
-apoo;1
-ianarch;1
-progra Web;1
-sd;1
-intro à l os;1
-Fonctionnement ordinateur;1
-Economie et comptabilité;1
-math1;1
-math2;1
-projet developpement web;1
-Anglais 1;1
+Algo;0
+apoo;0
+ianarch;0
+progra Web;0
+sd;0
+intro à l os;0
+Fonctionnement ordinateur;0
+Economie et comptabilité;0
+math1;0
+math2;0
+projet developpement web;0
+Anglais 1;0
 c;1
 Programmation Avancée en Java;1
 Analyse et Conception;1
