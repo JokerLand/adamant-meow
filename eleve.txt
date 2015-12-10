@@ -1,3 +1,10 @@
+#
+# Ce fichier permet d'encoder les cours disponible ou non disponible d'un élève
+# 1 : Disponible   0 : Non disponible
+# Format : Nom du cours;Disponibilité
+# Exemple : Algo;1        -> Indique que je dois encore passer le cours d'algo
+#			apoo;0        -> Indique que je ne dois plus passer le cours de apoo
+# /!\ Attention l'ordre des cours dans ce fichier dois être le même que le fichier cours.txt  /!\
 Algo;1
 apoo;1
 ianarch;1

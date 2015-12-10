@@ -1,3 +1,13 @@
+#
+# Ce fichier décrits les cours du programme de l'élève
+# Format : Nom du cours;Crédits;numéro du bloc; numéro du semestre bloquant
+# Numéro du bloc = 1 ou 2
+# Numéro du semestre bloquant : 0 -> Indique que le cours ne bloc pas de semestre
+#								1 -> Bloc le premier semestre
+#								2 -> Bloc le second semestre
+#  Exemple :  Algo;6;1;1     -> Cours d'Algo, de 6 crédits, appartenant au bloc 1 et bloque le semestre 1
+#			  ianarch;5;1;0  -> Cours d'Ianarch, de 5 crédits, appartenant au bloc 1 et bloque aucun semestre
+#			  Programmation Avancée en Java;4;2;0   -> Cours de Programation Avancée en Java, de 4 crédits , qui appartient au bloc 2,  et ne bloque pas de semestre 
 Algo;6;1;1
 apoo;5;1;0
 ianarch;5;1;0

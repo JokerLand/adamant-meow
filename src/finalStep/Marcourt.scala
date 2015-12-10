@@ -126,16 +126,16 @@ object Marcourt extends jacop {
 
     val nbCredits = cours.foldLeft(0)(addEcts)
     val creditAnnee = nbCredits / 3 // = 60
-    val creditsBloc1 = creditAnnee / 4 * 3 // = 45
+    val creditsMinimumAReussirBloc1 = creditAnnee / 4 * 3 // = 45
 
     val prerequisalgo = IntVar("", 0, 1)
 
     //Calcul des credits deja reussis
 
-    val totalEctsRestant = sommeCoursEctsRestants(cours)
-    val totalEctsReussis = nbCredits - totalEctsRestant
+    val totalCreditsRestant = sommeCoursEctsRestants(cours)
+    val totalEctsReussis = nbCredits - totalCreditsRestant
 
-    if (totalEctsReussis < creditsBloc1) {
+    if (totalEctsReussis < creditsMinimumAReussirBloc1) {
       println("PREMIERE (" + totalEctsReussis + " ects reussis)")
       val coursBloc1 = for (c <- cours if c.blocCours == 1) yield c.ok
 
@@ -148,8 +148,8 @@ object Marcourt extends jacop {
       else
         println("Aucune solution trouvée")
 
-    } else if (totalEctsRestant < 60) {
-      println("total ects restants = " + totalEctsRestant)
+    } else if (totalCreditsRestant < 60) {
+      println("total ects restants = " + totalCreditsRestant)
       for (c <- cours) {
         c.booleen #= c.disponible
       }
