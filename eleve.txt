@@ -4,7 +4,7 @@
 # Format : Nom du cours;Disponibilité
 # Exemple : Algo;1        -> Indique que je dois encore passer le cours d'algo
 #			apoo;0        -> Indique que je ne dois plus passer le cours de apoo
-# /!\ Attention l'ordre des cours dans ce fichier dois être le même que le fichier cours.txt  /!\
+# /!\ Attention l'ordre des cours dans ce fichier doit être le même que le fichier cours.txt  /!\
 Algo;0
 apoo;0
 ianarch;0
@@ -20,7 +20,7 @@ Anglais 1;0
 c;1
 Programmation Avancée en Java;1
 Analyse et Conception;1
-Gestion des Données;1
+Gestion des Données;0
 Programmation Web avancée;1
 Systeme informatique : principes et protocoles;1
 Internet : principes et protocoles avances;1

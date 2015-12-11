@@ -1,4 +1,4 @@
-package finalStep
+package etape5
 
 import JaCoP.scala._
 

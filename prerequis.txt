@@ -1,6 +1,6 @@
 #
 # Ce fichier permet d'encoder les corequis du programme de cours
-# Les numéros font references aux numéros de ligne du fichier cours.txt (sans compter les ligne de commentaires commencant par une #)
+# /!\ Les numéros font references aux numéros de ligne du fichier cours.txt (sans compter les ligne de commentaires commencant par une #) /!\
 # Format : numéro cours; numéros cours devant etre reussi
 # Exemple : 13; 1			- > Indique que Algo est un prérequis de c 
 13;1

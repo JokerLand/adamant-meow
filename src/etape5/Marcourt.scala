@@ -1,16 +1,16 @@
-package finalStep
+package etape5
 
 import JaCoP.scala._
 import scala.io.Source
 
 object Marcourt extends jacop {
 
+  //l utilite des differents fichiers .txt est expliquée au debut de ceux ci
   val COURS = "cours.txt"
   val ELEVE = "eleve.txt"
-  val PREREQUIS = "prequis.txt"
+  val PREREQUIS = "prerequis.txt"
   val COREQUIS = "corequis.txt"
-  
- 
+
   def main(args: Array[String]): Unit = {
 
     /**
@@ -137,8 +137,19 @@ object Marcourt extends jacop {
       }
     }
 
+    /**
+     * Additionne deux IntVar
+     * @param x un IntVar
+     * @param y un IntVar
+     * @return la somme des deux IntVar
+     */
     def addIntVar(x: IntVar, y: IntVar): IntVar = x + y
 
+    /**
+     * Additionne le nombre de crédits des cours qui seront dans le programme de l eleve
+     * @param la liste de tout les cours
+     * @return un IntVar
+     */
     def sommeCours(cours: List[Cours]): IntVar = {
       cours match {
         case Nil => IntVar("", 0, 0)
@@ -146,6 +157,10 @@ object Marcourt extends jacop {
       }
     }
 
+    /**
+     * Affichage des cours qui sont dans le programme de l eleve
+     * @param la liste des IntVar des cours
+     */
     def printSol(cours: List[IntVar]) {
       println("Voici la liste des cours que vous suivrez cette année : ")
       for (c <- cours if c.value == 1)
@@ -155,32 +170,24 @@ object Marcourt extends jacop {
     //creation des objets Cours et les mettre dans une liste
     val cours = creerCours(COURS, ELEVE)
 
-    val prerequis = lireCoPreRequis(PREREQUIS, cours)
-    val corequis = lireCoPreRequis(COREQUIS, cours)
-
-    //creation des conditions pour les prerequis et corequis
-    creerCorequis(corequis)
-    val listConversionPrerequis = creerPrerequis(prerequis)
-    val listConversionCoursBloquants = creerCoursBloquant(cours)
-
     //liste contenant les IntVar des cours
     val coursIntVar = for (c <- cours) yield c.intVarInscriptionAuCours
 
+    //calcul du nombre de credits, credits par année et credits necessaire pour passer au bloc 2
     val nbCredits = cours.foldLeft(0)(addCredits)
-    println("Nombre de Crédits " + nbCredits)
+    if (nbCredits != 180)
+      println("Le nombre de credits est differents de 180 (" + nbCredits + "), cela peut poser des problemes au programme")
     val creditParAnnee = nbCredits / 3 // = 60
     val creditsMinimumAReussirBloc1 = creditParAnnee / 4 * 3 // = 45
 
-    //Calcul des credits deja reussis
-
+    //Calcul des credits deja reussis et restants
     val totalCreditsRestant = sommeCoursCreditsRestants(cours)
     val totalCreditsReussis = nbCredits - totalCreditsRestant
 
-    if (totalCreditsReussis < creditsMinimumAReussirBloc1) {
-      println("PREMIERE (" + totalCreditsReussis + " crédits reussis)")
+    if (totalCreditsReussis < creditsMinimumAReussirBloc1) { //si l eleve a reussi moins de 45 credits, il reste dans le bloc 1
       val coursBloc1 = for (c <- cours if c.blocCours == 1) yield c.intVarInscriptionAuCours
 
-      for (c <- cours if c.blocCours == 1)
+      for (c <- cours if c.blocCours == 1) //l eleve ne doit passer que les cours disponibles dont il dispose dans le bloc 1
         c.boolVarInscritsAuCours #= c.disponible
 
       val b = satisfy(search(coursBloc1, input_order, indomain_max))
@@ -189,26 +196,32 @@ object Marcourt extends jacop {
       else
         println("Aucune solution trouvée")
 
-    } else if (totalCreditsRestant < 60) {
-      println("total credits restants = " + totalCreditsRestant)
-      for (c <- cours) {
+    } else if (totalCreditsRestant < 60) { //si il reste moins de 60 credits a passer a l eleve, il passe tout les cours qu il n a pas encore reussi
+      
+      for (c <- cours) //l eleve ne doit passer que les cours disponibles dont il dispose
         c.boolVarInscritsAuCours #= c.disponible
-      }
+
       val b = satisfy(search(coursIntVar, input_order, indomain_max))
       if (b)
         printSol(coursIntVar)
       else
         println("Aucune solution trouvée")
 
-    } else {
+    } else { //cas général
 
-      for (c <- cours if c.disponible == 0)
+      //creation des conditions pour les prerequis et corequis
+      val prerequis = lireCoPreRequis(PREREQUIS, cours)
+      val corequis = lireCoPreRequis(COREQUIS, cours)
+      creerCorequis(corequis)
+      val listConversionPrerequis = creerPrerequis(prerequis)
+      val listConversionCoursBloquants = creerCoursBloquant(cours)
+
+      for (c <- cours if c.disponible == 0) //si l eleve a deja reussi un cours, il ne doit plus le repasser
         c.boolVarInscritsAuCours #= 0
 
       val coursBlocants = listConversionCoursBloquants.foldLeft(IntVar("", 0, 0))(addIntVar)
       val nombredeconversion = listConversionPrerequis.foldLeft(IntVar("", 0, 0))(addIntVar)
 
-      
       val transgressionTotal = nombredeconversion + coursBlocants * (listConversionPrerequis.length + 1)
 
       sommeCours(cours) #= creditParAnnee
