@@ -5,6 +5,12 @@ import scala.io.Source
 
 object Marcourt extends jacop {
 
+  val COURS = "cours.txt"
+  val ELEVE = "eleve.txt"
+  val PREREQUIS = "prequis.txt"
+  val COREQUIS = "corequis.txt"
+  
+ 
   def main(args: Array[String]): Unit = {
 
     /**
@@ -38,7 +44,7 @@ object Marcourt extends jacop {
       for (listeCorequis <- toutCorequis) {
         for (i <- 0 until listeCorequis.length - 1) {
           if (listeCorequis(i).disponible == 1 && listeCorequis(i + 1).disponible == 1)
-            listeCorequis(i).booleen #= listeCorequis(i + 1).booleen
+            listeCorequis(i).boolVarInscritsAuCours #= listeCorequis(i + 1).boolVarInscritsAuCours
         }
       }
     }
@@ -49,17 +55,17 @@ object Marcourt extends jacop {
      * @return une liste d IntVar permettant de savoir si un prérequis a été converti en corequis
      */
     def creerPrerequis(toutPrerequis: List[List[Cours]]): List[IntVar] = {
-      val listConversion = for (prerequis <- toutPrerequis) yield IntVar("", 0, 1)
+      val listConversionDePrerequisACorequis = for (prerequis <- toutPrerequis) yield IntVar("", 0, 1)
 
       for (i <- 0 until toutPrerequis.length) {
         if ((toutPrerequis(i))(1).disponible == 1) {
-          (toutPrerequis(i))(0).booleen #= listConversion(i)
+          (toutPrerequis(i))(0).boolVarInscritsAuCours #= listConversionDePrerequisACorequis(i)
           (toutPrerequis(i))(0).intVarInscriptionAuCours #<= (toutPrerequis(i))(1).intVarInscriptionAuCours
         } else {
-          listConversion(i) #= 0
+          listConversionDePrerequisACorequis(i) #= 0
         }
       }
-      listConversion
+      listConversionDePrerequisACorequis
     }
 
     /**
@@ -91,7 +97,7 @@ object Marcourt extends jacop {
           case tete :: queue => {
             val intvars = for (i <- List.range(1, cours.length)) yield new IntVar("", 0, 1)
             for (i <- 1 until cours.length) {
-              (tete.booleen /\ cours(i).booleen) <=> (intvars(i - 1) #= 1)
+              (tete.boolVarInscritsAuCours /\ cours(i).boolVarInscritsAuCours) <=> (intvars(i - 1) #= 1)
             }
             append(creerContraintesCoursBloquants(queue), intvars)
           }
@@ -147,11 +153,11 @@ object Marcourt extends jacop {
     }
 
     //creation des objets Cours et les mettre dans une liste
-    val cours = creerCours("cours.txt", "eleve.txt")
+    val cours = creerCours(COURS, ELEVE)
     val coursBloc1 = for (a <- cours if a.blocCours == 1) yield a
 
-    val prerequis = lireCoPreRequis("prerequis.txt", cours)
-    val corequis = lireCoPreRequis("corequis.txt", cours)
+    val prerequis = lireCoPreRequis(PREREQUIS, cours)
+    val corequis = lireCoPreRequis(COREQUIS, cours)
 
     //creation des conditions pour les prerequis et corequis
     creerCorequis(corequis)
@@ -178,7 +184,7 @@ object Marcourt extends jacop {
       val coursBloc1 = for (c <- cours if c.blocCours == 1) yield c.intVarInscriptionAuCours
 
       for (c <- cours if c.blocCours == 1)
-        c.booleen #= c.disponible
+        c.boolVarInscritsAuCours #= c.disponible
 
       val b = satisfy(search(coursBloc1, input_order, indomain_max))
       if (b)
@@ -189,7 +195,7 @@ object Marcourt extends jacop {
     } else if (totalCreditsRestant < 60) {
       println("total ects restants = " + totalCreditsRestant)
       for (c <- cours) {
-        c.booleen #= c.disponible
+        c.boolVarInscritsAuCours #= c.disponible
       }
       val b = satisfy(search(coursIntVar, input_order, indomain_max))
       if (b)
@@ -200,7 +206,7 @@ object Marcourt extends jacop {
     } else {
 
       for (c <- cours if c.disponible == 0)
-        c.booleen #= 0
+        c.boolVarInscritsAuCours #= 0
 
       val coursBlocants = listConversionCoursBloquants.foldLeft(IntVar("", 0, 0))(addIntVar)
       val nombredeconversion = listConversionPrerequis.foldLeft(IntVar("", 0, 0))(addIntVar)
