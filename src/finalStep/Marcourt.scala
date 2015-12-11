@@ -128,7 +128,7 @@ object Marcourt extends jacop {
      * @param y un cours
      * @return la somme de l int et des crédits du cours
      */
-    def addEcts(x: Int, y: Cours): Int = x + y.credits
+    def addCredits(x: Int, y: Cours): Int = x + y.credits
 
     def sommeCoursCreditsRestants(cours: List[Cours]): Int = {
       cours match {
@@ -166,7 +166,7 @@ object Marcourt extends jacop {
     //liste contenant les IntVar des cours
     val coursIntVar = for (c <- cours) yield c.intVarInscriptionAuCours
 
-    val nbCredits = cours.foldLeft(0)(addEcts)
+    val nbCredits = cours.foldLeft(0)(addCredits)
     println("Nombre de Crédits " + nbCredits)
     val creditParAnnee = nbCredits / 3 // = 60
     val creditsMinimumAReussirBloc1 = creditParAnnee / 4 * 3 // = 45
@@ -174,10 +174,10 @@ object Marcourt extends jacop {
     //Calcul des credits deja reussis
 
     val totalCreditsRestant = sommeCoursCreditsRestants(cours)
-    val totalEctsReussis = nbCredits - totalCreditsRestant
+    val totalCreditsReussis = nbCredits - totalCreditsRestant
 
-    if (totalEctsReussis < creditsMinimumAReussirBloc1) {
-      println("PREMIERE (" + totalEctsReussis + " ects reussis)")
+    if (totalCreditsReussis < creditsMinimumAReussirBloc1) {
+      println("PREMIERE (" + totalCreditsReussis + " crédits reussis)")
       val coursBloc1 = for (c <- cours if c.blocCours == 1) yield c.intVarInscriptionAuCours
 
       for (c <- cours if c.blocCours == 1)
@@ -190,7 +190,7 @@ object Marcourt extends jacop {
         println("Aucune solution trouvée")
 
     } else if (totalCreditsRestant < 60) {
-      println("total ects restants = " + totalCreditsRestant)
+      println("total credits restants = " + totalCreditsRestant)
       for (c <- cours) {
         c.boolVarInscritsAuCours #= c.disponible
       }
