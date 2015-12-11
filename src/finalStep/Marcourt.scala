@@ -128,12 +128,12 @@ object Marcourt extends jacop {
      * @param y un cours
      * @return la somme de l int et des crédits du cours
      */
-    def addEcts(x: Int, y: Cours): Int = x + y.ects
+    def addEcts(x: Int, y: Cours): Int = x + y.credits
 
     def sommeCoursEctsRestants(cours: List[Cours]): Int = {
       cours match {
         case Nil => 0
-        case tete :: queue => tete.ects * tete.disponible + sommeCoursEctsRestants(queue)
+        case tete :: queue => tete.credits * tete.disponible + sommeCoursEctsRestants(queue)
       }
     }
 
@@ -142,7 +142,7 @@ object Marcourt extends jacop {
     def sommeCours(cours: List[Cours]): IntVar = {
       cours match {
         case Nil => IntVar("", 0, 0)
-        case tete :: queue => (tete.intVarInscriptionAuCours * tete.ects) + sommeCours(queue)
+        case tete :: queue => (tete.intVarInscriptionAuCours * tete.credits) + sommeCours(queue)
       }
     }
 
@@ -168,11 +168,9 @@ object Marcourt extends jacop {
     val coursIntVar = for (c <- cours) yield c.intVarInscriptionAuCours
 
     val nbCredits = cours.foldLeft(0)(addEcts)
-    println("Nombre de Crédits" + nbCredits)
+    println("Nombre de Crédits " + nbCredits)
     val creditAnnee = nbCredits / 3 // = 60
     val creditsMinimumAReussirBloc1 = creditAnnee / 4 * 3 // = 45
-
-    val prerequisalgo = IntVar("", 0, 1)
 
     //Calcul des credits deja reussis
 
@@ -212,11 +210,11 @@ object Marcourt extends jacop {
       val nombredeconversion = listConversionPrerequis.foldLeft(IntVar("", 0, 0))(addIntVar)
 
       
-      val transgression = nombredeconversion + coursBlocants * (listConversionPrerequis.length + 1)
+      val transgressionTotal = nombredeconversion + coursBlocants * (listConversionPrerequis.length + 1)
 
       sommeCours(cours) #= creditAnnee
 
-      val b = minimize(search(coursIntVar, input_order, indomain_max), transgression)
+      val b = minimize(search(coursIntVar, input_order, indomain_max), transgressionTotal)
       if (b) {
         println("nombre de conversion prerequis/corequis = " + nombredeconversion.value)
         println("nombre de cours bloquant le meme quadrimestre = " + coursBlocants.value)

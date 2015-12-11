@@ -2,7 +2,7 @@ package finalStep
 
 import JaCoP.scala._
 
-class Cours(intitule: String, aSuivre: Integer, bloc: Integer, credits: Integer, quadriBloque : Integer) {
+class Cours(intitule: String, aSuivre: Integer, bloc: Integer, paramCredits: Integer, quadriBloque : Integer) {
 
   val boolVarInscritsAuCours = new BoolVar(intitule)
   val intVarInscriptionAuCours = new IntVar(intitule, 0, 1)
@@ -15,9 +15,9 @@ class Cours(intitule: String, aSuivre: Integer, bloc: Integer, credits: Integer,
   
   val blocCours = bloc
   
-  val ects = credits
+  val credits = paramCredits
   
   val blocant = quadriBloque
 
-  override def toString() : String = intitule + " : reussi = " + aSuivre + " bloc = " + bloc + " credits = " + credits
+  override def toString() : String = intitule + " : reussi = " + aSuivre + " bloc = " + bloc + " credits = " + paramCredits
 }
