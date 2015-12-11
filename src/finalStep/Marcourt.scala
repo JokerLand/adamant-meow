@@ -169,8 +169,8 @@ object Marcourt extends jacop {
 
     val nbCredits = cours.foldLeft(0)(addEcts)
     println("Nombre de Crédits " + nbCredits)
-    val creditAnnee = nbCredits / 3 // = 60
-    val creditsMinimumAReussirBloc1 = creditAnnee / 4 * 3 // = 45
+    val creditParAnnee = nbCredits / 3 // = 60
+    val creditsMinimumAReussirBloc1 = creditParAnnee / 4 * 3 // = 45
 
     //Calcul des credits deja reussis
 
@@ -212,7 +212,7 @@ object Marcourt extends jacop {
       
       val transgressionTotal = nombredeconversion + coursBlocants * (listConversionPrerequis.length + 1)
 
-      sommeCours(cours) #= creditAnnee
+      sommeCours(cours) #= creditParAnnee
 
       val b = minimize(search(coursIntVar, input_order, indomain_max), transgressionTotal)
       if (b) {
