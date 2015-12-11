@@ -1,3 +1,8 @@
+#
+# Ce fichier permet d'encoder les corequis du programme de cours
+# Les numéros font references aux numéros de ligne du fichier cours.txt (sans compter les ligne de commentaires commencant par une #)
+# Format : numéro cours 1; numéros cours 2
+# Exemple : 17; 18			- > Indique que Programmation Web avancée et Systeme informatique : principes et protocoles sont des corequis 
 17;18
 19;18
 19;22
