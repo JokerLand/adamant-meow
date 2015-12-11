@@ -130,10 +130,10 @@ object Marcourt extends jacop {
      */
     def addEcts(x: Int, y: Cours): Int = x + y.credits
 
-    def sommeCoursEctsRestants(cours: List[Cours]): Int = {
+    def sommeCoursCreditsRestants(cours: List[Cours]): Int = {
       cours match {
         case Nil => 0
-        case tete :: queue => tete.credits * tete.disponible + sommeCoursEctsRestants(queue)
+        case tete :: queue => tete.credits * tete.disponible + sommeCoursCreditsRestants(queue)
       }
     }
 
@@ -154,7 +154,6 @@ object Marcourt extends jacop {
 
     //creation des objets Cours et les mettre dans une liste
     val cours = creerCours(COURS, ELEVE)
-    val coursBloc1 = for (a <- cours if a.blocCours == 1) yield a
 
     val prerequis = lireCoPreRequis(PREREQUIS, cours)
     val corequis = lireCoPreRequis(COREQUIS, cours)
@@ -174,7 +173,7 @@ object Marcourt extends jacop {
 
     //Calcul des credits deja reussis
 
-    val totalCreditsRestant = sommeCoursEctsRestants(cours)
+    val totalCreditsRestant = sommeCoursCreditsRestants(cours)
     val totalEctsReussis = nbCredits - totalCreditsRestant
 
     if (totalEctsReussis < creditsMinimumAReussirBloc1) {
