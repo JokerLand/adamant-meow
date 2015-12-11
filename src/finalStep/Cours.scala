@@ -2,16 +2,16 @@ package finalStep
 
 import JaCoP.scala._
 
-class Cours(intitule: String, dejaReussi: Integer, bloc: Integer, credits: Integer, quadriBloque : Integer) {
+class Cours(intitule: String, aSuivre: Integer, bloc: Integer, credits: Integer, quadriBloque : Integer) {
 
   val booleen = new BoolVar(intitule)
-  val ok = new IntVar(intitule, 0, 1)
+  val intVarInscriptionAuCours = new IntVar(intitule, 0, 1)
   
-  booleen <=> (ok #= 1)
+  booleen <=> (intVarInscriptionAuCours #= 1)
   
   val nom = intitule
   
-  val disponible = dejaReussi
+  val disponible = aSuivre
   
   val blocCours = bloc
   
@@ -19,5 +19,5 @@ class Cours(intitule: String, dejaReussi: Integer, bloc: Integer, credits: Integ
   
   val blocant = quadriBloque
 
-  override def toString() : String = intitule + " : reussi = " + dejaReussi + " bloc = " + bloc + " credits = " + credits
+  override def toString() : String = intitule + " : reussi = " + aSuivre + " bloc = " + bloc + " credits = " + credits
 }

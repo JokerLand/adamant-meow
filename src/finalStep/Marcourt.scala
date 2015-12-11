@@ -54,7 +54,7 @@ object Marcourt extends jacop {
       for (i <- 0 until toutPrerequis.length) {
         if ((toutPrerequis(i))(1).disponible == 1) {
           (toutPrerequis(i))(0).booleen #= listConversion(i)
-          (toutPrerequis(i))(0).ok #<= (toutPrerequis(i))(1).ok
+          (toutPrerequis(i))(0).intVarInscriptionAuCours #<= (toutPrerequis(i))(1).intVarInscriptionAuCours
         } else {
           listConversion(i) #= 0
         }
@@ -136,7 +136,7 @@ object Marcourt extends jacop {
     def sommeCours(cours: List[Cours]): IntVar = {
       cours match {
         case Nil => IntVar("", 0, 0)
-        case tete :: queue => (tete.ok * tete.ects) + sommeCours(queue)
+        case tete :: queue => (tete.intVarInscriptionAuCours * tete.ects) + sommeCours(queue)
       }
     }
 
@@ -159,9 +159,10 @@ object Marcourt extends jacop {
     val listConversionCoursBloquants = creerCoursBloquant(cours)
 
     //liste contenant les IntVar des cours
-    val coursIntVar = for (c <- cours) yield c.ok
+    val coursIntVar = for (c <- cours) yield c.intVarInscriptionAuCours
 
     val nbCredits = cours.foldLeft(0)(addEcts)
+    println("Nombre de Crédits" + nbCredits)
     val creditAnnee = nbCredits / 3 // = 60
     val creditsMinimumAReussirBloc1 = creditAnnee / 4 * 3 // = 45
 
@@ -174,7 +175,7 @@ object Marcourt extends jacop {
 
     if (totalEctsReussis < creditsMinimumAReussirBloc1) {
       println("PREMIERE (" + totalEctsReussis + " ects reussis)")
-      val coursBloc1 = for (c <- cours if c.blocCours == 1) yield c.ok
+      val coursBloc1 = for (c <- cours if c.blocCours == 1) yield c.intVarInscriptionAuCours
 
       for (c <- cours if c.blocCours == 1)
         c.booleen #= c.disponible
@@ -204,6 +205,7 @@ object Marcourt extends jacop {
       val coursBlocants = listConversionCoursBloquants.foldLeft(IntVar("", 0, 0))(addIntVar)
       val nombredeconversion = listConversionPrerequis.foldLeft(IntVar("", 0, 0))(addIntVar)
 
+      
       val transgression = nombredeconversion + coursBlocants * (listConversionPrerequis.length + 1)
 
       sommeCours(cours) #= creditAnnee
@@ -212,6 +214,7 @@ object Marcourt extends jacop {
       if (b) {
         println("nombre de conversion prerequis/corequis = " + nombredeconversion.value)
         println("nombre de cours bloquant le meme quadrimestre = " + coursBlocants.value)
+        println(coursIntVar.foldLeft(IntVar("",0,0))(addIntVar))
         printSol(coursIntVar)
       } else
         println("Aucune solution trouvée")
