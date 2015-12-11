@@ -217,7 +217,6 @@ object Marcourt extends jacop {
       if (b) {
         println("nombre de conversion prerequis/corequis = " + nombredeconversion.value)
         println("nombre de cours bloquant le meme quadrimestre = " + coursBlocants.value)
-        println(coursIntVar.foldLeft(IntVar("",0,0))(addIntVar))
         printSol(coursIntVar)
       } else
         println("Aucune solution trouvée")
